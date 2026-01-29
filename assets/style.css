@@ -1,0 +1,110 @@
+/* ==============================
+   GLOBAL PAGE STYLING
+============================== */
+
+body {
+    background: linear-gradient(135deg, #f7f9fc, #eef2f7);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #2c3e50;
+}
+
+/* ==============================
+   MAIN CONTAINER
+============================== */
+
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px 40px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ==============================
+   TITLE
+============================== */
+
+.title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #e91e63;
+    letter-spacing: 0.5px;
+}
+
+/* ==============================
+   CONTROLS (RADIO BUTTONS)
+============================== */
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #f9fafc;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px #e6e9ef;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #34495e;
+}
+
+/* Radio buttons layout */
+.controls .dash-radio-items {
+    display: flex;
+    gap: 20px;
+}
+
+/* Radio button labels */
+.controls label {
+    font-size: 15px;
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all 0.25s ease;
+}
+
+/* Hover effect */
+.controls label:hover {
+    background-color: #fde4ec;
+}
+
+/* ==============================
+   GRAPH CARD
+============================== */
+
+.dash-graph {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+
+    .controls .dash-radio-items {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+}

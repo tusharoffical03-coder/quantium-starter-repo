@@ -1,37 +1,93 @@
 import pandas as pd
-from dash import Dash, html, dcc
+from dash import Dash, html, dcc, Input, Output
 import plotly.express as px
 
-# Read data
+# ==============================
+# READ & PREPARE DATA
+# ==============================
+
 df = pd.read_csv("output.csv")
 
-# Convert date
+# Standardise columns
+df.columns = df.columns.str.lower().str.strip()
+
+# Convert date to datetime
 df["date"] = pd.to_datetime(df["date"])
 
-# Aggregate sales by date
-df = df.groupby("date", as_index=False)["sales"].sum()
+# Standardise region values
+df["region"] = df["region"].astype(str).str.lower().str.strip()
 
-# Sort by date
-df = df.sort_values("date")
-
-# Line chart
-fig = px.line(
-    df,
-    x="date",
-    y="sales",
-    title="Pink Morsels Sales Over Time",
-    labels={
-        "date": "Date",
-        "sales": "Total Sales"
-    }
-)
+# ==============================
+# CREATE DASH APP
+# ==============================
 
 app = Dash(__name__)
 
-app.layout = html.Div([
-    html.H1("Pink Morsels Sales Visualiser"),
-    dcc.Graph(figure=fig)
+app.layout = html.Div(className="container", children=[
+
+    html.H1("Pink Morsels Sales Visualiser", className="title"),
+
+    html.Div(className="controls", children=[
+        html.Label("Select Region:", className="label"),
+
+        dcc.RadioItems(
+            id="region-selector",
+            options=[
+                {"label": "All", "value": "all"},
+                {"label": "North", "value": "north"},
+                {"label": "East", "value": "east"},
+                {"label": "South", "value": "south"},
+                {"label": "West", "value": "west"},
+            ],
+            value="all",
+            inline=True
+        )
+    ]),
+
+    dcc.Graph(id="sales-graph")
 ])
+
+# ==============================
+# CALLBACK
+# ==============================
+
+@app.callback(
+    Output("sales-graph", "figure"),
+    Input("region-selector", "value")
+)
+def update_graph(selected_region):
+
+    # Filter by region
+    if selected_region == "all":
+        filtered_df = df
+    else:
+        filtered_df = df[df["region"] == selected_region]
+
+    # Aggregate sales by date
+    grouped_df = (
+        filtered_df
+        .groupby("date", as_index=False)
+        .agg({"sales": "sum"})
+        .sort_values("date")
+    )
+
+    # Create line chart
+    fig = px.line(
+        grouped_df,
+        x="date",
+        y="sales",
+        title="Daily Total Sales Over Time",
+        labels={
+            "date": "Date",
+            "sales": "Total Sales"
+        }
+    )
+
+    return fig
+
+# ==============================
+# RUN SERVER
+# ==============================
 
 if __name__ == "__main__":
     app.run(debug=True)
